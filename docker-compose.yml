@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  test_runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ROLE_NAME: user-management
+

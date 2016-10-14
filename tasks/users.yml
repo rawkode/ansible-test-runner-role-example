@@ -1,0 +1,30 @@
+---
+ - name: Ensuring sudo is installed
+   package: name=sudo state=present
+
+ - name: Ensuring the 'sudo' group exists
+   group: name=sudo state=present
+
+ - name: Ensuring the 'sudo' group can perform passwordless actions
+   lineinfile:
+     dest: /etc/sudoers
+     state: present
+     regexp: '^%sudo ALL=\(ALL\) NOPASSWD\: ALL'
+     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+
+ - name: Creating users
+   user:
+     name={{ item.name }}
+     state=present
+     shell={{ item.shell | default('/bin/bash') }}
+     home={{ item.home | default('/home/' ~ item.name) }}
+     comment={{ item.comment | default('') }}
+   with_items: "{{ users }}"
+
+ - name: Granting sudo priviledges
+   user:
+     name={{ item.name }}
+     groups=sudo
+     append=yes
+   with_items: "{{ users }}"
+   when: item.sudo is defined and item.sudo == True

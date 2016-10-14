@@ -1,0 +1,5 @@
+users:
+  - name: rawkode
+    shell: /bin/bash
+    home: /home/rawkode
+    sudo: True
